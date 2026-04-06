@@ -12,6 +12,8 @@ MAX_RECOMMENDATIONS = 10
 
 def _load_csv(filename):
     csv_path = MODEL_DIR / filename
+    if not csv_path.exists():
+        raise FileNotFoundError(f'Missing required data file: {csv_path}')
     try:
         return pd.read_csv(csv_path)
     except UnicodeDecodeError:
@@ -79,16 +81,20 @@ def _build_artifacts_from_csv():
     return popular_df_local, pt_local, book_local, similarity_local
 
 
-def _build_title_stats(book_df):
-    ratings = _load_csv('Ratings.csv')
-    merged = ratings.merge(book_df, on='ISBN')
+def _build_title_stats(book_df, popular_df_df):
+    ratings_path = MODEL_DIR / 'Ratings.csv'
 
-    stats = (
-        merged.groupby('Book-Title')['Book-Rating']
-        .agg(['count', 'mean'])
-        .reset_index()
-        .rename(columns={'count': 'num_ratings', 'mean': 'avg_ratings'})
-    )
+    if ratings_path.exists():
+        ratings = _load_csv('Ratings.csv')
+        merged = ratings.merge(book_df, on='ISBN')
+        stats = (
+            merged.groupby('Book-Title')['Book-Rating']
+            .agg(['count', 'mean'])
+            .reset_index()
+            .rename(columns={'count': 'num_ratings', 'mean': 'avg_ratings'})
+        )
+    else:
+        stats = popular_df_df[['Book-Title', 'num_ratings', 'avg_ratings']].copy()
 
     max_count = max(float(stats['num_ratings'].max()), 1.0)
     stats['popularity_norm'] = stats['num_ratings'] / max_count
@@ -111,20 +117,24 @@ def _load_or_build_artifacts():
 
     popular_df_local, pt_local, book_local, similarity_local = _build_artifacts_from_csv()
 
-    with open(popular_path, 'wb') as f:
-        pickle.dump(popular_df_local, f)
-    with open(pt_path, 'wb') as f:
-        pickle.dump(pt_local, f)
-    with open(book_path, 'wb') as f:
-        pickle.dump(book_local, f)
-    with open(similarity_path, 'wb') as f:
-        pickle.dump(similarity_local, f)
+    # Serverless runtimes may be read-only, so persistence is best-effort only.
+    try:
+        with open(popular_path, 'wb') as f:
+            pickle.dump(popular_df_local, f)
+        with open(pt_path, 'wb') as f:
+            pickle.dump(pt_local, f)
+        with open(book_path, 'wb') as f:
+            pickle.dump(book_local, f)
+        with open(similarity_path, 'wb') as f:
+            pickle.dump(similarity_local, f)
+    except OSError:
+        pass
 
     return popular_df_local, pt_local, book_local, similarity_local
 
 
 popular_df, pt, book, similarity = _load_or_build_artifacts()
-title_stats = _build_title_stats(book)
+title_stats = _build_title_stats(book, popular_df)
 
 title_catalog = (
     pd.DataFrame({'Book-Title': pt.index})
