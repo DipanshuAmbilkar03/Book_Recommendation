@@ -1,0 +1,6 @@
+Model/.ipynb_checkpoints/
+Model/*.ipynb
+__pycache__/
+*.pyc
+.git/
+.vscode/
