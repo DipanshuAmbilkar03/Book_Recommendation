@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookWise | Smart Recommendations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #081226;
+            --card: #ffffff;
+            --line: #dbe4f0;
+            --tint: #f1f5f9;
+            --sea: #1d4ed8;
+            --amber: #3b82f6;
+            --cherry: #dc2626;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            font-family: 'Manrope', sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 8%, rgba(29, 78, 216, 0.24), transparent 28%),
+                radial-gradient(circle at 90% 16%, rgba(96, 165, 250, 0.2), transparent 26%),
+                linear-gradient(155deg, #f8fbff 0%, #eff6ff 52%, #e0e7ff 100%);
+        }
+
+        .topbar {
+            background: rgba(255, 255, 255, 0.82);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+            backdrop-filter: blur(9px);
+        }
+
+        .brand {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.4px;
+        }
+
+        .hero {
+            padding: 3.6rem 0 2.3rem;
+        }
+
+        .panel {
+            background: linear-gradient(130deg, #0f172a 0%, #1e3a8a 52%, #2563eb 100%);
+            border-radius: 22px;
+            color: #fff;
+            padding: 2rem;
+            box-shadow: 0 16px 42px rgba(15, 23, 42, 0.25);
+            animation: rise 600ms ease both;
+        }
+
+        .panel h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+        }
+
+        .search-box {
+            margin-top: 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 1rem;
+        }
+
+        .search-input {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .search-input:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 0.18rem rgba(96, 165, 250, 0.28);
+        }
+
+        .btn-recommend {
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
+            color: #fff;
+            font-weight: 700;
+            padding: 0.75rem 1.15rem;
+        }
+
+        .message {
+            margin-top: 1.2rem;
+            border-radius: 12px;
+            padding: 0.75rem 0.95rem;
+            font-size: 0.94rem;
+        }
+
+        .message.info {
+            background: #eff6ff;
+            border: 1px solid #93c5fd;
+            color: #1e40af;
+        }
+
+        .message.warn {
+            background: #fff1f2;
+            border: 1px solid #fda4af;
+            color: var(--cherry);
+        }
+
+        .results {
+            padding-bottom: 3.3rem;
+        }
+
+        .result-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(148, 163, 184, 0.16);
+            height: 100%;
+            transition: transform 220ms ease, box-shadow 220ms ease;
+            animation: rise 500ms ease both;
+        }
+
+        .result-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.2);
+        }
+
+        .result-cover {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background: var(--tint);
+        }
+
+        .result-body {
+            padding: 1rem;
+        }
+
+        .result-title {
+            font-weight: 700;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.55rem;
+        }
+
+        .result-author {
+            color: var(--sea);
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            border: 1px solid #bfdbfe;
+            background: #eff6ff;
+            color: #1e40af;
+            margin-top: 0.75rem;
+            padding: 0.22rem 0.6rem;
+            font-weight: 700;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg topbar">
+        <div class="container py-2">
+            <a class="navbar-brand brand fw-bold" href="/">BookWise</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link fw-semibold" href="/">Popular</a>
+                <a class="nav-link fw-semibold active" href="/recommend">Smart Recommend</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container hero">
+        <section class="panel">
+            <p class="text-white-50 mb-1">Semantic Suggestion Engine</p>
+            <h1 class="mb-2">Find Your Next Favorite Book</h1>
+            <p class="text-white-50 mb-0">Type a title, even with minor typos. The model blends taste similarity with crowd confidence.</p>
+
+            <form action="/recommend_books" method="post" class="search-box row g-2 align-items-center">
+                <div class="col-12 col-lg-9">
+                    <input
+                        name="user_input"
+                        type="text"
+                        class="form-control form-control-lg search-input"
+                        placeholder="Try: Harry Potter and the Chamber of Secrets"
+                        value="{{ selected_title if selected_title else '' }}"
+                        list="book-suggestions"
+                        required
+                    >
+                    <datalist id="book-suggestions">
+                        {% for title in suggestions[:300] %}
+                        <option value="{{ title }}"></option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+                <div class="col-12 col-lg-3 d-grid">
+                    <button type="submit" class="btn btn-recommend btn-lg">Generate Picks</button>
+                </div>
+            </form>
+
+            {% if message %}
+            <div class="message {{ 'info' if data else 'warn' }}">
+                {{ message }}
+            </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <section class="container results">
+        <div class="row g-4">
+            {% if data %}
+                {% for item in data %}
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <article class="result-card" style="animation-delay: {{ (loop.index0 % 12) * 60 }}ms;">
+                        <img src="{{ item.image }}" class="result-cover" alt="{{ item.title }}">
+                        <div class="result-body">
+                            <div class="result-title">{{ item.title }}</div>
+                            <div class="result-author">{{ item.author }}</div>
+                            <span class="score-badge">Similarity {{ item.similarity }}%</span>
+                        </div>
+                    </article>
+                </div>
+                {% endfor %}
+            {% elif selected_title %}
+                <div class="col-12 text-center py-4">
+                    <h4 class="mb-2">No recommendation list available</h4>
+                    <p class="text-secondary mb-0">Try a different spelling or pick from the suggestion dropdown.</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

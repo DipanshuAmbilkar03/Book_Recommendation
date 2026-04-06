@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookWise | Popular Picks</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #0f172a;
+            --mist: #f8fafc;
+            --card: #ffffff;
+            --accent: #2563eb;
+            --accent-soft: #93c5fd;
+            --teal: #1d4ed8;
+            --line: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            font-family: 'Manrope', sans-serif;
+            background:
+                radial-gradient(circle at 15% 5%, rgba(59, 130, 246, 0.28), transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(37, 99, 235, 0.22), transparent 28%),
+                linear-gradient(140deg, #eff6ff 0%, #f8fafc 50%, #e0e7ff 100%);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            background: rgba(255, 255, 255, 0.82);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        .brand {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.4px;
+        }
+
+        .hero {
+            padding: 3.8rem 0 2rem;
+        }
+
+        .hero-card {
+            background: linear-gradient(130deg, #0f172a 0%, #1e3a8a 70%, #1d4ed8 100%);
+            color: #fff;
+            border-radius: 22px;
+            padding: 2.2rem;
+            box-shadow: 0 14px 40px rgba(15, 23, 42, 0.25);
+            animation: rise 620ms ease-out both;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 999px;
+            padding: 0.45rem 0.9rem;
+            font-size: 0.85rem;
+            margin-right: 0.55rem;
+            margin-top: 0.55rem;
+        }
+
+        .section-label {
+            color: #334155;
+            font-size: 0.82rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .book-grid {
+            padding-bottom: 3.4rem;
+        }
+
+        .book-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            overflow: hidden;
+            height: 100%;
+            box-shadow: 0 8px 24px rgba(148, 163, 184, 0.16);
+            transition: transform 220ms ease, box-shadow 220ms ease;
+            animation: rise 520ms ease-out both;
+        }
+
+        .book-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.2);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background: #f1f5f9;
+        }
+
+        .book-content {
+            padding: 1rem 1rem 1.1rem;
+        }
+
+        .book-title {
+            font-weight: 700;
+            line-height: 1.28;
+            min-height: 2.55rem;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .book-author {
+            color: var(--teal);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-top: 0.45rem;
+            min-height: 1.2rem;
+        }
+
+        .stat-wrap {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.95rem;
+            gap: 0.5rem;
+        }
+
+        .stat {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.35rem 0.55rem;
+            font-size: 0.82rem;
+            color: #334155;
+            white-space: nowrap;
+        }
+
+        .cta-strip {
+            margin: 0 0 3.5rem;
+            border: 1px dashed rgba(15, 23, 42, 0.16);
+            background: rgba(255, 255, 255, 0.65);
+            border-radius: 14px;
+            padding: 1.1rem 1rem;
+        }
+
+        .btn-cta {
+            border-radius: 999px;
+            background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            padding: 0.55rem 1rem;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg topbar">
+        <div class="container py-2">
+            <a class="navbar-brand fw-bold brand" href="/">BookWise</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link fw-semibold" href="/">Popular</a>
+                <a class="nav-link fw-semibold" href="/recommend">Find Similar</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container hero">
+        <div class="hero-card">
+            <p class="section-label text-white-50 mb-2">Discovery Board</p>
+            <h1>Top 50 Reader Favorites</h1>
+            <p class="mb-3 text-white-50">Ranked by crowd activity and rating quality to give you a reliable starting shelf.</p>
+            <span class="hero-chip">Live from your local dataset</span>
+            <span class="hero-chip">Quality-first ranking</span>
+            <span class="hero-chip">One-click recommendations</span>
+        </div>
+    </main>
+
+    <section class="container book-grid">
+        <div class="row g-4">
+            {% for i in range(book_name|length) %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <article class="book-card" style="animation-delay: {{ (i % 12) * 60 }}ms;">
+                    <img src="{{ image[i] }}" class="book-cover" alt="{{ book_name[i] }}">
+                    <div class="book-content">
+                        <div class="book-title">{{ book_name[i] }}</div>
+                        <div class="book-author">{{ author[i] }}</div>
+                        <div class="stat-wrap">
+                            <span class="stat">Votes: {{ votes[i] }}</span>
+                            <span class="stat">Rating: {{ "%.1f"|format(rating[i]) }}</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="cta-strip d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <strong>Need similar books for one you already love?</strong>
+                <div class="text-secondary">Switch to the recommendation page and search by title.</div>
+            </div>
+            <a href="/recommend" class="btn btn-cta">Open Recommender</a>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
